@@ -41,24 +41,30 @@ import app.junsu.test.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MusicScreen() {
+fun MusicScreen(
+    onHideCurrentPlayingModal: () -> Unit,
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = onHideCurrentPlayingModal) {
                         Icon(
                             imageVector = Icons.Outlined.KeyboardArrowDown,
                             contentDescription = null,
                         )
                     }
                 },
-                title = { Text(text = if (isSystemInDarkTheme()) {
-                    "다크테마임"
-                } else {
-                    "라이트테마임"
-                }) },
+                title = {
+                    Text(
+                        text = if (isSystemInDarkTheme()) {
+                            "다크테마임"
+                        } else {
+                            "라이트테마임"
+                        }
+                    )
+                },
                 actions = {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
