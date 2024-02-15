@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -17,15 +19,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import app.junsu.test.data.playlist.PlayList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    openPlayList: () -> Unit,
+    openPlayList: (
+        playListId: Long,
+        playListTitle: String,
+    ) -> Unit,
     onShowCurrentPlayingModal: () -> Unit,
 ) {
     Scaffold(
@@ -70,7 +75,7 @@ fun HomeScreen(
             }
         },
     ) { padValues ->
-        Column(
+        /*Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padValues),
@@ -83,9 +88,57 @@ fun HomeScreen(
             ) {
                 Text(text = "재생 목록으로 이동")
             }
+        }*/
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padValues),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) { // %= RecyclerView
+            items(playListItems) { item: PlayList ->
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    onClick = {
+                        openPlayList(
+                            item.id,
+                            item.title,
+                        )
+                    },
+                ) {
+                    Text(
+                        modifier = Modifier.padding(all = 12.dp),
+                        text = item.title,
+                    )
+                }
+            }
         }
     }
 }
+
+val playListItems = listOf(
+    PlayList(
+        id = 1,
+        title = "좋아요 표시한 곡",
+        madeBy = "박준수",
+    ),
+    PlayList(
+        id = 2,
+        title = "싫어요 표시한 곡",
+        madeBy = "박준수",
+    ),
+    PlayList(
+        id = 3,
+        title = "you and i",
+        madeBy = "IU",
+    ),
+    PlayList(
+        id = 4,
+        title = "성시경 베스트",
+        madeBy = "성시경",
+    ),
+)
 
 val homeBottomAppBarItems: List<BottomAppBarItem> = listOf(
     BottomAppBarItem(

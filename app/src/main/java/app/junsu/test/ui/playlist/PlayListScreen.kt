@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PlayListScreen(
     navigateUp: () -> Unit,
+    playListId: Long,
+    playListTitle: String,
 ) {
     Scaffold(
         topBar = {
@@ -32,7 +34,7 @@ fun PlayListScreen(
                         )
                     }
                 },
-                title = { Text(text = "내 플레이리스트") },
+                title = { Text(text = playListTitle) },
             )
         },
     ) { padValues ->

@@ -11,11 +11,13 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import app.junsu.test.ui.home.HomeScreen
-import app.junsu.test.ui.music.MusicScreen
+import app.junsu.test.ui.music.MusicSheetContent
 import app.junsu.test.ui.playlist.PlayListScreen
 import app.junsu.test.ui.theme.TestExampleTheme
 import kotlinx.coroutines.launch
@@ -54,7 +56,8 @@ fun MusicApp() {
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
-            MusicScreen(
+            MusicSheetContent(
+                // mac: fn + shift + f6 windows: shift + f6
                 onHideCurrentPlayingModal = {
                     scope.launch {
                         scaffoldState.bottomSheetState.hide()
@@ -70,8 +73,8 @@ fun MusicApp() {
         ) {
             composable("home") {
                 HomeScreen(
-                    openPlayList = {
-                        navController.navigate("play_list")
+                    openPlayList = { playListId, playListTitle ->
+                        navController.navigate("play_list/$playListId?title=$playListTitle")
                     },
                     onShowCurrentPlayingModal = {
                         scope.launch {
@@ -80,9 +83,27 @@ fun MusicApp() {
                     },
                 )
             }
-            composable("play_list") {
+            composable(
+                route = "play_list/{play_list_id}?title={play_list_title}",
+                arguments = listOf(
+                    navArgument(name = "play_list_id") {
+                        type = NavType.LongType
+                    },
+                    navArgument(name = "play_list_title") {
+                        type = NavType.StringType
+                    },
+                ),
+            ) { backStackEntry ->
+                val playListId = backStackEntry.arguments?.getLong("play_list_id")
+                    ?: throw IllegalArgumentException()
+
+                val playListTitle = backStackEntry.arguments?.getString("play_list_title")
+                    ?: throw IllegalArgumentException()
+
                 PlayListScreen(
                     navigateUp = navController::navigateUp,
+                    playListId = playListId,
+                    playListTitle = playListTitle,
                 )
             }
         }

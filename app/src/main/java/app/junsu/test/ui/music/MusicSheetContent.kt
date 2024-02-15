@@ -41,7 +41,7 @@ import app.junsu.test.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MusicScreen(
+fun MusicSheetContent(
     onHideCurrentPlayingModal: () -> Unit,
 ) {
     Scaffold(
